@@ -1,8 +1,32 @@
 defer
 =====
 
-simple inline code deferral
+simple inline code deferral, 118 bytes (gzipped)
 
+### Usage
+```html
+<html>
+    <head>
+        <script>var defer=function(){var b=[],c=function(a){return b.push(a)};c.resolve=function(){for(var a=0;a<b.length;a++)b[a]()};return c}();</script>
+    </head>
+    <body>
+        <!-- assorted markup -->
+        <script>
+            defer(function() {
+                console.log('I am executed later when the dom has loaded');
+            });
+        </script>
+        <!-- more markup -->
+        <script>
+            defer.resolve();
+        </script>
+    </body>
+</html>
+```
+
+### Code
+
+#### Original
 ```javascript
 var defer = (function(){
 
@@ -23,15 +47,7 @@ var defer = (function(){
 })();
 ```
 
-```html
-<!-- head -->
-<script>
+#### Minified
+```javascript
 var defer=function(){var b=[],c=function(a){return b.push(a)};c.resolve=function(){for(var a=0;a<b.length;a++)b[a]()};return c}();
-</script>
-
-<!-- footer -->
-<script>
-defer.resolve();
-</script>
-
 ```
