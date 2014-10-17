@@ -23,6 +23,15 @@ var defer = (function(){
 })();
 ```
 
-```javascript
+```html
+<!-- head -->
+<script>
 var defer=function(){var b=[],c=function(a){return b.push(a)};c.resolve=function(){for(var a=0;a<b.length;a++)b[a]()};return c}();
+</script>
+
+<!-- footer -->
+<script>
+defer.resolve();
+</script>
+
 ```
