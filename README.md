@@ -1,13 +1,13 @@
 defer
 =====
 
-simple inline code deferral, 118 bytes (gzipped)
+simple inline code deferral, 128 bytes (gzipped)
 
 ### Usage
 ```html
 <html>
     <head>
-        <script>var defer=function(){var b=[],c=function(a){return b.push(a)};c.resolve=function(){for(var a=0;a<b.length;a++)b[a]()};return c}();</script>
+        <script>(function(e){var b=[],c,d=function(a){if(c)return a();b.push(a)};d.resolve=function(){for(var a;a=b.shift();)a();c=!0};e.defer=d})(window);</script>
     </head>
     <body>
         <!-- assorted markup -->
@@ -28,26 +28,34 @@ simple inline code deferral, 118 bytes (gzipped)
 
 #### Original
 ```javascript
-var defer = (function(){
+(function(window) {
 
-    var _queue = [];
+    var _queue = [],
+        _resolved;
 
-    var exports = function(fn) {
-        return _queue.push(fn);
-    };
-
-    exports.resolve = function() {
-        for( var i = 0; i < _queue.length; i++ ) {
-            _queue[i]();
+    var defer = function(fn) {
+        if(_resolved) {
+            return fn();
         }
+        _queue.push(fn);
     };
 
-    return exports;
+    defer.resolve = function() {
 
-})();
+        var f;
+        while (f = _queue.shift()) {
+            f();
+        }
+
+        _resolved = true;
+    };
+
+    window.defer = defer;
+
+})(window);
 ```
 
 #### Minified
 ```javascript
-var defer=function(){var b=[],c=function(a){return b.push(a)};c.resolve=function(){for(var a=0;a<b.length;a++)b[a]()};return c}();
+(function(e){var b=[],c,d=function(a){if(c)return a();b.push(a)};d.resolve=function(){for(var a;a=b.shift();)a();c=!0};e.defer=d})(window);
 ```

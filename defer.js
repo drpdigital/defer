@@ -1,17 +1,25 @@
-var defer = (function(){
+(function(window) {
 
-  var _queue = [];
+    var _queue = [],
+        _resolved;
 
-  var exports = function(fn) {
-    return _queue.push(fn);
-  };
+    var defer = function(fn) {
+        if(_resolved) {
+            return fn();
+        }
+        _queue.push(fn);
+    };
 
-  exports.resolve = function() {
-    for( var i = 0; i < _queue.length; i++ ) {
-      _queue[i]();
-    }
-  };
+    defer.resolve = function() {
 
-  return exports;
+        var f;
+        while (f = _queue.shift()) {
+            f();
+        }
 
-})();
+        _resolved = true;
+    };
+
+    window.defer = defer;
+
+})(window);
